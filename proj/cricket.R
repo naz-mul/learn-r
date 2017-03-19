@@ -12,3 +12,5 @@ webpage <- read_html(url)
 table.nodes <- html_nodes(webpage, "table")
 table <- html_table(table.nodes[1], fill = TRUE)
 
+df <- do.call(rbind.data.frame, table)
+write.csv(file = "data/2016.csv", df)
