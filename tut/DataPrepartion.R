@@ -1,6 +1,34 @@
 ### Data Preparation ###
 # http://handsondatascience.com/DataO.pdf
 
+package.install.func <- function(x) {
+  for (i in x) {
+    #  require returns TRUE invisibly if it was able to load package
+    if (!require(i , character.only = TRUE)) {
+      #  If package was not able to be loaded then re-install
+      install.packages(i , dependencies = TRUE)
+      #  Load package after installing
+      require(i , character.only = TRUE)
+    }
+  }
+}
+
+setwd("~/Desktop/learn-r/tut")
+
+# Install and load packages
+package.install.func(
+  c(
+    'RGtk2',
+    'rattle',
+    'randomForest',
+    'tidyr',
+    'ggplot2',
+    'dplyr',
+    'lubridate',
+    'FSelector'
+  )
+)
+
 library(RGtk2)
 library(rattle) # The weather dataset and normvarNames()
 library(randomForest) # Impute missing values using na.roughfix()
@@ -8,7 +36,6 @@ library(tidyr) # Tidy the dataset
 library(ggplot2) # Visualise data
 library(dplyr) # Data prep and pipes %>%
 library(lubridate) # handle dates
-#install.packages('FSelector')
 library(FSelector) # Feature selection
 
 # Note data path
@@ -76,41 +103,51 @@ id <- c('date', 'location')
 
 # Clean - Ignore IDs, Outputs, Missing
 # Always watch out for including output variables as inputs
-ignore <- union(id, if(exists('risk')) risk)
+ignore <- union(id, if (exists('risk'))
+  risk)
 # ignore <- union(id, if(exists('target')) target)
 
 # Unique variables - they are identifiers
-(ids <- which(sapply(ds, function(x) length(unique(x))) == nrow(ds)))
+(ids <-
+    which(sapply(ds, function(x)
+      length(unique(
+        x
+      ))) == nrow(ds)))
 ignore <- union(ignore, names(ids))
 
 # Remove variables whre all the values are missing
 # Count the number of variables with missing values
 # List the variables with missing values
-mvc <- sapply(ds[vars], function(x) sum(is.na(x)))
+mvc <- sapply(ds[vars], function(x)
+  sum(is.na(x)))
 mvc
 mvn <- names(which(mvc == nrow(ds)))
 ignore <- union(ignore, mvn)
 
 # Ignore variables with 70% values missing
-mvn <- names(which(mvc >= 0.7*nrow(ds)))
+mvn <- names(which(mvc >= 0.7 * nrow(ds)))
 ignore <- union(ignore, mvn)
 
 
 # Clean - Ignore multilevel, Constants
 factors <- which(sapply(ds[vars], is.factor))
-lvls <- sapply(factors, function(x) length(levels(ds[[x]])))
+lvls <- sapply(factors, function(x)
+  length(levels(ds[[x]])))
 (many <- names(which(lvls > 20)))
 ignore <- union(ignore, many)
 
 # Constants
-(constants <- names(which(sapply(ds[vars], function(x) all(x == x[1L])))))
+(constants <-
+    names(which(sapply(ds[vars], function(x)
+      all(x == x[1L])))))
 ignore <- union(ignore, constants)
 
 
 # Clean - Identify Correlated Variables
-mc <- cor(ds[which(sapply(ds, is.numeric))], use="complete.obs")
+mc <- cor(ds[which(sapply(ds, is.numeric))], use = "complete.obs")
 mc[upper.tri(mc, diag = TRUE)] <- NA
-mc <- mc %>% abs() %>% data.frame() %>% mutate(var1=row.names(mc)) %>% gather(var2, cor, -var1) %>% na.omit()
+mc <-
+  mc %>% abs() %>% data.frame() %>% mutate(var1 = row.names(mc)) %>% gather(var2, cor, -var1) %>% na.omit()
 mc <- mc[order(-abs(mc$cor)), ]
 # Keep one remove the other from the correlated pair
 # Normally, limit the removals to those correlations that are 0.95 or more
@@ -160,7 +197,8 @@ dim(ds[vars])
 sum(is.na(ds[vars]))
 mo <- attr(na.omit(ds[vars]), 'na.action')
 omit <- union(omit, mo)
-if (length(omit)) ds <- ds[-omit,]
+if (length(omit))
+  ds <- ds[-omit,]
 sum(is.na(ds[vars]))
 dim(ds[vars])
 ds <- ods
@@ -169,7 +207,8 @@ ds <- ods
 # Clean - Normalise Factors
 # Variables may have levels with spaces and mixture of cases
 factors <- which(sapply(ds[vars], is.factor))
-for (f in factors) levels(ds[[f]]) <- normVarNames(levels(ds[[f]]))
+for (f in factors)
+  levels(ds[[f]]) <- normVarNames(levels(ds[[f]]))
 
 
 # Clean - Ensure Target is Categoric
@@ -178,7 +217,7 @@ ds[target] <- as.factor(ds[[target]])
 table(ds[target])
 
 # visualise using ggplot
-p <- ggplot(ds, aes_string(x=target))
+p <- ggplot(ds, aes_string(x = target))
 p <- p + geom_bar(width = 0.2)
 print(p)
 
@@ -189,7 +228,9 @@ print(p)
 inputc <- setdiff(vars, target)
 inputc
 
-inputi <- sapply(inputc, function(x) which(x == names(ds)), USE.NAMES = FALSE)
+inputi <-
+  sapply(inputc, function(x)
+    which(x == names(ds)), USE.NAMES = FALSE)
 inputi
 
 # record the number of observations
@@ -219,8 +260,26 @@ catc
 # only needed once
 dsdate <- paste0("_", format(Sys.Date(), "%y%m%d"))
 dsrdata <- paste0(dsname, dsdate, ".RData")
-save(ds, dsname, dspath, dsdate, target, risk, id, ignore, vars, nobs, omit, inputi, inputc, numi,
-     numc, cati, catc, file=dsrdata)
+save(
+  ds,
+  dsname,
+  dspath,
+  dsdate,
+  target,
+  risk,
+  id,
+  ignore,
+  vars,
+  nobs,
+  omit,
+  inputi,
+  inputc,
+  numi,
+  numc,
+  cati,
+  catc,
+  file = dsrdata
+)
 
 # load the data
 (load(dsrdata))

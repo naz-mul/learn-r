@@ -9,6 +9,8 @@
 # Correlation - Strength of relationship
 
 setwd("~/Desktop/learn-r/tut")
+
+# Load data
 cars <- read.csv('Cars.csv')
 head(cars)
 
