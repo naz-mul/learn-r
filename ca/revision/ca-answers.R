@@ -11,19 +11,25 @@
 #                  -- Quantitative: Number of Cylinders, City MPG, Highway MPG
 
 # c) Present City MPG data in a well-labelled bar graph.
-make.and.model <- c('BMW 3181', 'BMW 3181', 'Buick Century', 'Chevrolet Blazer')
-vehicle.type <- c('Subcompact', 'Subcompact', 'Midsize', 'Four-wheel drive')
+
+make.and.model <-
+  c('BMW 3181', 'BMW 3181', 'Buick Century', 'Chevrolet Blazer')
+vehicle.type <-
+  c('Subcompact', 'Subcompact', 'Midsize', 'Four-wheel drive')
 trans.type <- c('Automatic', 'Maual', 'Automatic', 'Automatic')
 num.cyl <- c(4, 4, 6, 6)
 city.mpg <- c(22, 23, 20, 16)
 high.mpg <- c(31, 32, 29, 30)
 
-cars.data <- data.frame('Make and Model' = make.and.model, 
-                        'Vehicle Type' = vehicle.type, 
-                        'Transmission Type' = trans.type,
-                        'Number of Cylinders' = num.cyl, 
-                        'City MPG' = city.mpg, 
-                        'Highway MPG' = high.mpg)
+cars.data <- data.frame(
+  'Make and Model' = make.and.model,
+  'Vehicle Type' = vehicle.type,
+  'Transmission Type' = trans.type,
+  'Number of Cylinders' = num.cyl,
+  'City MPG' = city.mpg,
+  'Highway MPG' = high.mpg
+)
+
 barplot(
   cars.data$City.MPG,
   beside = TRUE,
@@ -43,11 +49,88 @@ barplot(
 #    construct the pie chart. If not, explain why not.
 # Ans. Although, pie chart can be created, the law of pie chart is the percentage
 #      must add up to 100%
+
+# calculate percentage
 cars.data$City.MPG / sum(cars.data$City.MPG)
 sum(cars.data$City.MPG / sum(cars.data$City.MPG))
 
+# or use this to find percentage
+prop.table(cars.data$City.MPG)
+
+# plot a pie chart
 pie(cars.data$City.MPG, labels = cars.data$Make.and.Model)
 
+## Question 2
 
+# a) Load the file tyres.csv into R
 tyres <- read.csv('tyres.csv')
-countres <- read.csv('countries.csv')
+
+# b) Produce a well labelled and presented scatter graph of the data, displaying
+#    the trend line
+plot(tyres$Distance...kms., 
+     tyres$Tread..mm.,
+     xlab = 'Distance (km)',
+     ylab = 'Tread (mm)',
+     main = 'Tyre Change Estimation',
+     sub = 'Queston 2 - Section b')
+
+library(ggplot2)
+(ggplot(tyres, aes(tyres$Distance...kms., tyres$Tread..mm.)) 
+  + geom_point() 
+  + geom_smooth() 
+  + xlab('Distance (km)') 
+  + ylab('Tread (mm)')
+  + ggtitle('Estimated Tyre Tread vs Distance travelled'))
+
+
+
+
+
+
+## Question 3
+
+# a) Load the faithful data set that is built in to R.
+faithful.data <- faithful
+
+### b) Plot the data and then briefly describe the dataset
+plot(x = faithful.data, main = 'Old Faithful Geyser', sub = 'Yellowstone National Club, WY, USA')
+# Ans. Describe??
+
+# c) Summarise the data and calculate the
+# Minimum value : 1.600 and 43.0
+# 1st Quartile:   2.163 and 58.0
+# Median:         4.000 and 76.0
+# 3rd Quartile:   4.454 and 82.0
+# Maximum Value:  5.100 and 96.0
+summary(faithful.data)
+
+#### alternative solution ####
+
+# find min values
+min(faithful.data$eruptions)
+min(faithful.data$waiting)
+
+# find 1st and 3rd quartile values
+quantile(faithful.data$eruptions)
+quantile(faithful.data$waiting)
+
+# find median values
+median(faithful.data$eruptions)
+median(faithful.data$waiting)
+
+# find max values
+max(faithful.data$eruptions)
+max(faithful.data$waiting)
+
+
+# d) Calculate the standard deviations of the waiting time between eruptions. Can
+#    we assume a constant spread across the groups make a brief note.
+sd(faithful.data$waiting)
+
+
+
+## Question 4
+
+# a) Import data from the countries.csv file
+countries <- read.csv('countries.csv')
+
