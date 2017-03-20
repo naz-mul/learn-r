@@ -1,6 +1,8 @@
 # CA 2016
 
-## Question 1
+################################
+######### Question 1 ###########
+################################
 
 # a) What are the individuals in this data set?
 # Ans. Cars
@@ -60,10 +62,15 @@ prop.table(cars.data$City.MPG)
 # plot a pie chart
 pie(cars.data$City.MPG, labels = cars.data$Make.and.Model)
 
-## Question 2
+
+
+################################
+######### Question 2 ###########
+################################
 
 # a) Load the file tyres.csv into R
 tyres <- read.csv('tyres.csv')
+
 
 # b) Produce a well labelled and presented scatter graph of the data, displaying
 #    the trend line
@@ -83,18 +90,33 @@ library(ggplot2)
   + ggtitle('Estimated Tyre Tread vs Distance travelled'))
 
 
+# c) If the tyre travels 16 thousand km’s what 
+#   would the forecasted tread be?
+library(forecast)
 
 
 
 
-## Question 3
+
+# d) Governmentregulationsstatethatminimumtreadis4mm.Whatisthe
+#    forecasted maximum distance you could travel on one set of tyres?
+
+
+
+
+
+################################
+######### Question 3 ###########
+################################
 
 # a) Load the faithful data set that is built in to R.
 faithful.data <- faithful
 
+
 ### b) Plot the data and then briefly describe the dataset
 plot(x = faithful.data, main = 'Old Faithful Geyser', sub = 'Yellowstone National Club, WY, USA')
 # Ans. Describe??
+
 
 # c) Summarise the data and calculate the
 # Minimum value : 1.600 and 43.0
@@ -129,8 +151,35 @@ sd(faithful.data$waiting)
 
 
 
-## Question 4
+
+################################
+######### Question 4 ###########
+################################
 
 # a) Import data from the countries.csv file
 countries <- read.csv('countries.csv')
+
+
+# b) Apply k-means to the data, and store the clustering result (ensure you set the
+#    correct number of clusters)
+
+
+# c) Print the components of for the k-Means operation(print)
+
+
+# d) Plot the clusters and their centres for the first two dimensions: per capita
+#    income and literacy.
+
+
+
+
+# e) Plot the clusters for all dimensions displayed in a single graph (similar to
+#    below)
+
+
+
+# f) Briefly discuss the clusters that were generated 
+#   and the countries that are in each cluster are they 
+#   homogeneous did the clustering algorithm work?
+
 
