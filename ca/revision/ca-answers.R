@@ -1,5 +1,19 @@
 # CA 2016
 
+(package.install.func <- function(x) {
+  for (i in x) {
+    #  require returns TRUE invisibly if it was able to load package
+    if (!require(i , character.only = TRUE)) {
+      #  If package was not able to be loaded then re-install
+      install.packages(i , dependencies = TRUE)
+      #  Load package after installing
+      require(i , character.only = TRUE)
+    }
+  }
+})
+
+setwd("~/Desktop/learn-r/ca/revision")
+
 ################################
 ######### Question 1 ###########
 ################################
@@ -9,8 +23,8 @@
 
 # b) For each individual, what variables are given? Which of these variables are
 #    categorical and which are quantitative?
-# Ans. 6 variables -- Categorial: Make and Model, Vehicle Type, Tranmission Type
-#                  -- Quantitative: Number of Cylinders, City MPG, Highway MPG
+# Ans. 6 variables -- Categorial: Make and Model, Vehicle Type, Tranmission Type, Number of Cylinders
+#                  -- Quantitative: City MPG, Highway MPG
 
 # c) Present City MPG data in a well-labelled bar graph.
 
@@ -23,28 +37,28 @@ num.cyl <- c(4, 4, 6, 6)
 city.mpg <- c(22, 23, 20, 16)
 high.mpg <- c(31, 32, 29, 30)
 
-cars.data <- data.frame(
-  'Make and Model' = make.and.model,
-  'Vehicle Type' = vehicle.type,
-  'Transmission Type' = trans.type,
-  'Number of Cylinders' = num.cyl,
-  'City MPG' = city.mpg,
-  'Highway MPG' = high.mpg
+(
+  cars.data <- data.frame(
+    'Make and Model' = make.and.model,
+    'Vehicle Type' = vehicle.type,
+    'Transmission Type' = trans.type,
+    'Number of Cylinders' = num.cyl,
+    'City MPG' = city.mpg,
+    'Highway MPG' = high.mpg
+  )
 )
 
-barplot(
-  cars.data$City.MPG,
-  beside = TRUE,
-  col = c("lightblue", "mistyrose",
-          "lightcyan", "lavender"),
-  legend = cars.data$Make.and.Model,
-  ylim = c(0, 30),
-  main = "Fuel Economy of 1998 cars",
-  font.main = 4,
-  sub = "Question 1 - Section C",
-  col.sub = "gray20",
-  ylab = "City MPG",
-  cex.names = 1.5
+(
+  barplot(
+    cars.data$City.MPG,
+    beside = TRUE,
+    ylim = c(0, 30),
+    main = "Fuel Economy of 1998 cars",
+    font.main = 4,
+    names.arg = cars.data$Make.and.Model,
+    sub = "Question 1 - Section C",
+    ylab = "City MPG"
+  )
 )
 
 # d) Would it also be correct to use a pie chart to display these data? If so,
@@ -70,38 +84,53 @@ pie(cars.data$City.MPG, labels = cars.data$Make.and.Model)
 
 # a) Load the file tyres.csv into R
 tyres <- read.csv('tyres.csv')
-
+library(dplyr)
+tyres <- arrange(.data = tyres, order(Distance...kms.))
 
 # b) Produce a well labelled and presented scatter graph of the data, displaying
 #    the trend line
-plot(tyres$Distance...kms., 
-     tyres$Tread..mm.,
-     xlab = 'Distance (km)',
-     ylab = 'Tread (mm)',
-     main = 'Tyre Change Estimation',
-     sub = 'Queston 2 - Section b')
+x <- tyres$Distance...kms.
+y <- tyres$Tread..mm.
+relation <- lm(y ~ x)
 
+plot(
+  tyres$Distance...kms.,
+  tyres$Tread..mm.,
+  abline(relation),
+  xlab = 'Distance (km)',
+  ylab = 'Tread (mm)',
+  main = 'Tyre Change Estimation',
+  sub = 'Queston 2 - Section b'
+)
+
+## Alternative solution
 library(ggplot2)
-(ggplot(tyres, aes(tyres$Distance...kms., tyres$Tread..mm.)) 
-  + geom_point() 
-  + geom_smooth() 
-  + xlab('Distance (km)') 
+(
+  ggplot(data = tyres, aes(
+    x = tyres$Distance...kms., y = tyres$Tread..mm.
+  ))
+  + geom_point()
+  + geom_smooth()
+  + xlab('Distance (km)')
   + ylab('Tread (mm)')
-  + ggtitle('Estimated Tyre Tread vs Distance travelled'))
+  + ggtitle('Estimated Tyre Tread vs Distance travelled')
+)
 
 
-# c) If the tyre travels 16 thousand km’s what 
+
+# c) If the tyre travels 16 thousand km’s what
 #   would the forecasted tread be?
-library(forecast)
+distance <- data.frame(x = 16000)
+predict(relation, distance)
 
 
 
 
-
-# d) Governmentregulationsstatethatminimumtreadis4mm.Whatisthe
+# d) Government regulations state that minimum tread is 4mm. What is the
 #    forecasted maximum distance you could travel on one set of tyres?
-
-
+relation2 <- lm(x ~ y)
+tread <- data.frame(y = 4)
+predict(relation2, tread)
 
 
 
@@ -115,7 +144,7 @@ faithful.data <- faithful
 
 ### b) Plot the data and then briefly describe the dataset
 plot(x = faithful.data, main = 'Old Faithful Geyser', sub = 'Yellowstone National Club, WY, USA')
-# Ans. Describe??
+# Describe: 2 quantatitive variables, 272 observations
 
 
 # c) Summarise the data and calculate the
@@ -148,7 +177,7 @@ max(faithful.data$waiting)
 # d) Calculate the standard deviations of the waiting time between eruptions. Can
 #    we assume a constant spread across the groups make a brief note.
 sd(faithful.data$waiting)
-
+# ??
 
 
 
@@ -163,23 +192,54 @@ countries <- read.csv('countries.csv')
 # b) Apply k-means to the data, and store the clustering result (ensure you set the
 #    correct number of clusters)
 
+kc <- kmeans(countries[, 2:5], centers = 3)
 
 # c) Print the components of for the k-Means operation(print)
-
+print(kc)
 
 # d) Plot the clusters and their centres for the first two dimensions: per capita
 #    income and literacy.
-
-
+## clusters
+plot(
+  countries[, 3],
+  countries[, 2],
+  col = kc$cluster,
+  xlab = "Literacy rate",
+  ylab = "Per capita income",
+  main = "Literacy rate vs Per capita income"
+)
+## centers
+plot(
+  countries[, 3],
+  countries[, 2],
+  col = kc$centers,
+  xlab = "Literacy rate",
+  ylab = "Per capita income",
+  main = "Literacy rate vs Per capita income"
+)
 
 
 # e) Plot the clusters for all dimensions displayed in a single graph (similar to
 #    below)
+plot(
+  countries[, -1],
+  col = kc$cluster,
+  main = "kmeans clustering"
+)
 
-
-
-# f) Briefly discuss the clusters that were generated 
-#   and the countries that are in each cluster are they 
+# f) Briefly discuss the clusters that were generated
+#   and the countries that are in each cluster are they
 #   homogeneous did the clustering algorithm work?
 
+# RED signifies developed
+# BLACK signifies emerging
+# GREEN signifies underdeveloped
 
+# RED(2) = Germany, Australia, UK, Sweden, Greece, Italy, Japan
+# BLACK(1) = Brazil, Argentina, South Africa, Turkey, Lithuania,
+# GREEN(3) = Mozambique, China, Zambia, Namibia, Georgia, Pakistan, India
+
+# In my opinion the clustering algorithm worked because
+# a) cluster shown correlates with the relationships for each criteria
+# b) RED, BLACK and GREEN are apart from each other
+# c) The more income the higher literacy rate, higher life expcectancy and lower infant mortality
