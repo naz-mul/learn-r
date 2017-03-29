@@ -191,7 +191,7 @@ countries <- read.csv('countries.csv')
 
 # b) Apply k-means to the data, and store the clustering result (ensure you set the
 #    correct number of clusters)
-
+set.seed(18)
 kc <- kmeans(countries[, 2:5], centers = 3)
 
 # c) Print the components of for the k-Means operation(print)
