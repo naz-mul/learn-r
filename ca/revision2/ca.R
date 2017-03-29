@@ -99,17 +99,25 @@ summary(df)
 
 df_factor <- read.csv("cardiology.csv", stringsAsFactors = TRUE)
 str(df_factor)
-kc <- kmeans(df_factor, centers = 2)
 
+# extract the numeric variables
+library(dplyr)
+df_factor_num <- select_if(df_factor, is.numeric)
+plot(df_factor_num)
+
+# create k-means clusters
+set.seed(123)
+kc <- kmeans(df_factor_num, centers = 2)
+kc
 
 # 2. Plot the cluster and their centers for the first two dimensions: age and sex
-# plot(
-#   df_factor[, c("age", "sex")],
-#   col = kc$cluster,
-#   xlab = "age",
-#   ylab = "sex",
-#   main = "Age vs Sex Clustering"
-# )
+plot(
+  df_factor[, c("age", "sex")],
+  col = kc$cluster,
+  xlab = "age",
+  ylab = "sex",
+  main = "Age vs Sex Clustering"
+)
 # points(kc$centers, pch=19,cex=1.5, col=1:100)
 
 
