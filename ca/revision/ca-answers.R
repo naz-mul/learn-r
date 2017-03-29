@@ -201,23 +201,19 @@ print(kc)
 #    income and literacy.
 ## clusters
 plot(
-  countries[, 3],
-  countries[, 2],
+  countries[, c(3,2)],
   col = kc$cluster,
   xlab = "Literacy rate",
   ylab = "Per capita income",
   main = "Literacy rate vs Per capita income"
 )
-## centers
-plot(
-  countries[, 3],
-  countries[, 2],
-  col = kc$centers,
-  xlab = "Literacy rate",
-  ylab = "Per capita income",
-  main = "Literacy rate vs Per capita income"
-)
+# points(kc$centers, pch=19,cex=1.5, col=1:100)
 
+
+library(cluster)
+clusplot(countries[,-1],  kc$cluster)
+
+## ????????? assign centers and clusters in one plot ???????
 
 # e) Plot the clusters for all dimensions displayed in a single graph (similar to
 #    below)
@@ -235,6 +231,8 @@ plot(
 # BLACK signifies emerging
 # GREEN signifies underdeveloped
 
+o <- order(kc$cluster)
+data.frame(countries$Country[o], kc$cluster[o])
 # RED(2) = Germany, Australia, UK, Sweden, Greece, Italy, Japan
 # BLACK(1) = Brazil, Argentina, South Africa, Turkey, Lithuania,
 # GREEN(3) = Mozambique, China, Zambia, Namibia, Georgia, Pakistan, India
