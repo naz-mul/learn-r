@@ -192,7 +192,7 @@ countries <- read.csv('countries.csv')
 # b) Apply k-means to the data, and store the clustering result (ensure you set the
 #    correct number of clusters)
 set.seed(18)
-kc <- kmeans(countries[, 2:5], centers = 3)
+kc <- kmeans(countries[, 2:5], centers = 3, nstart = 10)
 
 # c) Print the components of for the k-Means operation(print)
 print(kc)
@@ -207,13 +207,8 @@ plot(
   ylab = "Per capita income",
   main = "Literacy rate vs Per capita income"
 )
-# points(kc$centers, pch=19,cex=1.5, col=1:100)
+points(kc$centers[, c(3, 2)], pch=17,cex=3)
 
-
-library(cluster)
-clusplot(countries[,-1],  kc$cluster)
-
-## ????????? assign centers and clusters in one plot ???????
 
 # e) Plot the clusters for all dimensions displayed in a single graph (similar to
 #    below)
@@ -223,6 +218,17 @@ plot(
   main = "kmeans clustering"
 )
 
+# Playing around
+# par(mfrow = c(2, 3))
+# (for(i in 1:6) {
+#   # Run kmeans() on x with three clusters and one start
+#   km.out <- kmeans(countries[, 2:5], centers = 3, nstart = 16)
+# 
+#   # Plot clusters
+#   plot(countries[, 3], col = km.out$cluster,
+#        main = km.out$tot.withinss,
+#        xlab = "", ylab = "")
+# })
 # f) Briefly discuss the clusters that were generated
 #   and the countries that are in each cluster are they
 #   homogeneous did the clustering algorithm work?

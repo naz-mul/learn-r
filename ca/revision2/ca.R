@@ -87,7 +87,11 @@ cor(x, y)
 # correlation between age and blood pressure is 0.279
 # Lower the correlation, lower the relationship between x and y
 # i.e. Age vs Blood pressure
-
+# Correlation coefficients whose magnitude are
+# between 0.9 and 1.0 indicate variables which can be considered very highly correlated
+# between 0.7 and 0.9 indicate variables which can be considered highly correlated.
+# between 0.5 and 0.7 indicate variables which can be considered moderately correlated.
+# between 0.3 and 0.5 indicate variables which have a low correlation
 
 
 ##########################
@@ -100,26 +104,30 @@ summary(df)
 df_factor <- read.csv("cardiology.csv", stringsAsFactors = TRUE)
 str(df_factor)
 
+# process data
+df$gender[df$sex == "Male"] <- 1
+df$gender[df$sex == "Female"] <- 0
+
 # extract the numeric variables
 library(dplyr)
-df_factor_num <- select_if(df_factor, is.numeric)
+df_factor_num <- select_if(df, is.numeric)
 plot(df_factor_num)
 
 # create k-means clusters
 set.seed(123)
-kc <- kmeans(df_factor_num, centers = 2)
+kc <-
+  kmeans(df_factor_num, centers = 2, nstart = 20) # default nstart is 10
 kc
 
 # 2. Plot the cluster and their centers for the first two dimensions: age and sex
 plot(
-  df_factor[, c("age", "sex")],
+  df[, c("age", "gender")],
   col = kc$cluster,
   xlab = "age",
   ylab = "sex",
   main = "Age vs Sex Clustering"
 )
-# points(kc$centers, pch=19,cex=1.5, col=1:100)
-
+points(kc$centers[, c("age", "gender")], pch = 5, cex = 2)
 
 
 # 3. Make a comment on the clusters formed, are there any meaningful patterns or significant

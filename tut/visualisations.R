@@ -29,6 +29,8 @@ package.install.func <- function(x) {
 
 setwd("~/Desktop/learn-r/tut")
 
+cars <- read.table("Cars.txt", sep = "\t", header = T)
+
 # Install and load ggplot
 package.install.func(c('ggplot2'))
 library(ggplot2)
