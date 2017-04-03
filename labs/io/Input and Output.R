@@ -1,17 +1,24 @@
+########################################
+############ INPUT & OUTPUT ############
+########################################
+
+# Creat a vector
 scores <- c(61, 66, 90, 88, 100)
 
-# create an empty data frame
+# Create an empty data frame
 scores <- data.frame()
 
-# then invoke the built-in
+# Visually edit data frame
 scores <- edit(scores)
 
+# Create data frame with column names
 points <- data.frame(
-  label=c("Low", "Mid", "High"),
-  lbound=c( 0, 0.67, 1.64),
-  ubound=c(0.674, 1.64, 2.33))
+  label = c("Low", "Mid", "High"),
+  lbound = c(0, 0.67, 1.64),
+  ubound = c(0.674, 1.64, 2.33)
+)
 
-# output R script
+# Output to R script
 # redirect output to a file
 sink("script_output.txt")
 
@@ -21,17 +28,17 @@ source("script.R")
 # Resume writing output to console
 sink()
 
-# append using cat rather overwrite
-cat(results, file="analysisReport.txt", append=TRUE)
+# Append writing to a file using cat
+cat(scores, file = "analysisReport.txt", append = TRUE)
 
 # NB. open a connection to a file rather
 # than hard-coding it everytime (less error prone)
 data <- c(2, 3, 5)
 con <- file("analysisReport.txt", "w")
-cat(data, file=con)
+cat(data, file = con)
 
 results <- c("aa", "bb", "cc", "dd", "ee")
-cat(results, file=con)
+cat(results, file = con)
 close(con)
 
 # show files in your working directory
@@ -44,22 +51,30 @@ list.files(recursive = TRUE)
 list.files(all.files = TRUE)
 
 # read files which has fixed width format
-records <- read.fwf("fixed-wdith.txt", widths=c(10,10,4,-1,4))
+records <- read.fwf("fixed-width.txt", widths = c(10, 10, 4, -1, 4))
 
 # add labels in columns
-records <- read.fwf("fixed-width.txt", widths=c(10,10,4,-1,4), col.names = c("Last", "First", "Born", "Died"))
+records <-
+  read.fwf(
+    "fixed-width.txt",
+    widths = c(10, 10, 4, -1, 4),
+    col.names = c("Last", "First", "Born", "Died")
+  )
 
 # reading tabluar data files
 dfrm <- read.table("fixed-width.txt")
 
 # if file uses separator e.g a colon
-dfrm <- read.table("fixed-width.txt", sep=":")
+dfrm <- read.table("fixed-width.txt", sep = ":")
 
 # find the type of data in the data frame
-class(dfram$V1)
+class(dfrm$V1)
 
 # use the column names when it builds the data frame
-dfrm <- read.table("fixed-wdith.txt", header=TRUE, stringsAsFactor=FALSE)
+dfrm <-
+  read.table("fixed-width.txt",
+             header = TRUE,
+             stringsAsFactor = FALSE)
 
 
 # prevent data frame to read text as factor
@@ -67,25 +82,30 @@ dfrm <- read.table("fixed-width.txt", stringsAsFactors = FALSE)
 
 
 # set N/A fields with different value e.g. a period
-dfrm <- read.table("filename.txt", na.strings=".")
+dfrm <- read.table("filename.txt", na.strings = ".")
 
 # tell the file contains headers
-dfrm <- read.table("statisticians.txt", header=TRUE, stringsAsFactor=FALSE)
+dfrm <-
+  read.table("statisticians.txt",
+             header = TRUE,
+             stringsAsFactor = FALSE)
 
 # read csv files with no header
-tbl <- read.csv("table-data.csv", header=FALSE)
+tbl <- read.csv("table-data.csv", header = FALSE)
 
 # display the structure of an object
 str(tbl)
 
 # set non-numeric characters as-is
-tbl <- read.csv("table-data.csv", as.is=TRUE)
+tbl <- read.csv("table-data.csv", as.is = TRUE)
 
 # write to a csv files
-write.csv(tbl, file = "table-data-x.csv", row.names=TRUE)
+write.csv(tbl, file = "table-data-x.csv", row.names = TRUE)
 
 # read csv/table files from the web
-crimedata <- read.csv("http://samplecsvs.s3.amazonaws.com/SacramentocrimeJanuary2006.csv", as.is=T)
+crimedata <-
+  read.csv("http://samplecsvs.s3.amazonaws.com/SacramentocrimeJanuary2006.csv",
+           as.is = T)
 
 # read data from html tables
 # import XML package
@@ -94,17 +114,31 @@ url <- "http://world.bymap.org/Population.html"
 htmlTbls <- readHTMLTable(url)
 
 # reading files with complex structure
-singles <- scan("singles.txt", what=numeric(0))
+singles <- scan("singles.txt", what = numeric(0))
 
 # read files with repeating sequence
-triples <- scan("triples.txt", what=list(character(0),numeric(0),numeric(0)))
+triples <-
+  scan("triples.txt", what = list(character(0), numeric(0), numeric(0)))
 
 # assign names to the list elements
-triples <- scan("triples.txt", what=list(date=character(0), high=numeric(0), low=numeric(0)))
+triples <-
+  scan("triples.txt",
+       what = list(
+         date = character(0),
+         high = numeric(0),
+         low = numeric(0)
+       ))
 
 # read data stored as column order
-world.series <- scan("http://lib.stat.cmu.edu/datasets/wseries", skip = 35,nlines = 23,what = list(year = integer(0), pattern = character(0)))
+world.series <-
+  scan(
+    "http://lib.stat.cmu.edu/datasets/wseries",
+    skip = 35,
+    nlines = 23,
+    what = list(year = integer(0), pattern = character(0))
+  )
 
 # sort list elements by year
 perm <- order(world.series$year)
-world.series <- list(year = world.series$year[perm], pattern = world.series$pattern[perm])
+world.series <-
+  list(year = world.series$year[perm], pattern = world.series$pattern[perm])

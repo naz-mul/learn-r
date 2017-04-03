@@ -1,4 +1,6 @@
-# CA 2016
+####################################
+############# CA 2016 ##############
+####################################
 
 (package.install.func <- function(x) {
   for (i in x) {
@@ -229,6 +231,7 @@ plot(
 #        main = km.out$tot.withinss,
 #        xlab = "", ylab = "")
 # })
+
 # f) Briefly discuss the clusters that were generated
 #   and the countries that are in each cluster are they
 #   homogeneous did the clustering algorithm work?

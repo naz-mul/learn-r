@@ -1,4 +1,6 @@
-# CA Tutorial
+####################################
+############# CA 2015 ##############
+####################################
 setwd("~/Desktop/learn-r/ca/revision2/")
 
 ##########################
@@ -105,29 +107,36 @@ df_factor <- read.csv("cardiology.csv", stringsAsFactors = TRUE)
 str(df_factor)
 
 # process data
-df$gender[df$sex == "Male"] <- 1
-df$gender[df$sex == "Female"] <- 0
+# df$gender[df$sex == "Male"] <- 1
+# df$gender[df$sex == "Female"] <- 0
 
 # extract the numeric variables
-library(dplyr)
-df_factor_num <- select_if(df, is.numeric)
-plot(df_factor_num)
+# library(dplyr)
+# df_factor_num <- select_if(df, is.numeric)
+# plot(df_factor_num)
+#
+# # create k-means clusters
+# set.seed(123)
+# kc <-
+#   kmeans(df_factor_num, centers = 2, nstart = 20) # default nstart is 10
+# kc
 
-# create k-means clusters
-set.seed(123)
-kc <-
-  kmeans(df_factor_num, centers = 2, nstart = 20) # default nstart is 10
-kc
+library(cluster)
+cardiology.pam <- pam(df, 2)
+names(cardiology.pam)
+
+plot(cardiology.pam)
+plot(df, col = cardiology.pam$medoids)
 
 # 2. Plot the cluster and their centers for the first two dimensions: age and sex
 plot(
-  df[, c("age", "gender")],
-  col = kc$cluster,
+  df[, c("age", "sex")],
+  col = cardiology.pam$medoids,
   xlab = "age",
   ylab = "sex",
   main = "Age vs Sex Clustering"
 )
-points(kc$centers[, c("age", "gender")], pch = 5, cex = 2)
+points(kc$centers[, c("age", "sex")], pch = 5, cex = 2)
 
 
 # 3. Make a comment on the clusters formed, are there any meaningful patterns or significant
@@ -163,7 +172,7 @@ dtree <-
     control = rpart.control(usesurrogate = 0, maxsurrogate = 0)
   )
 
-# 2. View the root noede of the decision tree and note which patients have been
+# 2. View the root node of the decision tree and note which patients have been
 # classified as Sick or Healthy. Make a short note on the data, what is the percentage
 # split between sick and healthy in the dataset?
 plotcp(dtree)

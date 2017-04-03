@@ -1,0 +1,3 @@
+Regression
+https://www.r-bloggers.com/simple-linear-regression-2/
+https://ww2.coastal.edu/kingw/statistics/R-tutorials/simplelinear.html
